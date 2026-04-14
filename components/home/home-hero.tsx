@@ -1,52 +1,59 @@
 import Link from "next/link";
 import { LoaderSlot } from "@/components/ui/loader-slot";
-import { heroStats } from "@/lib/data/home";
+import { heroLabels, heroPills, heroStats, resumeSnapshot } from "@/lib/data/home";
 import { siteConfig } from "@/lib/config/site";
 
 export function HomeHero() {
   return (
     <section className="page-shell py-10 sm:py-14 lg:py-20">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-stretch">
+      <div className="grid gap-6 xl:grid-cols-[1.18fr_0.82fr]">
         <div className="card-surface overflow-hidden p-8 sm:p-10 lg:p-12">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--foreground-soft)]">
-              Premium dark professional starter
-            </p>
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
-              {siteConfig.owner}
-              <span className="mt-2 block text-[var(--foreground-soft)]">{siteConfig.ownerTitle}</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--foreground-soft)] sm:text-lg">
-              Real Journey is a portfolio-first learning platform designed to grow from student foundations to architect, manager, and CTO-level systems thinking.
-            </p>
-          </div>
+          <div className="max-w-4xl">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="chip">Premium dark professional</span>
+              <span className="text-sm text-[var(--foreground-soft)]">
+                {siteConfig.owner} · {siteConfig.ownerTitle}
+              </span>
+            </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/learn"
-              className="inline-flex rounded-full bg-[var(--foreground)] px-5 py-3 text-sm font-medium text-[var(--background)] transition hover:-translate-y-0.5"
-            >
-              Explore learning
-            </Link>
-            <Link
-              href="/blog"
-              className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] px-5 py-3 text-sm font-medium transition hover:-translate-y-0.5"
-            >
-              Visit blog
-            </Link>
-            <Link
-              href="/stories"
-              className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] px-5 py-3 text-sm font-medium transition hover:-translate-y-0.5"
-            >
-              Open stories
-            </Link>
+            <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
+              Build depth.
+              <span className="mt-2 block text-[var(--foreground-soft)]">
+                Learn with structure. Ship with calm systems thinking.
+              </span>
+            </h1>
+
+            <p className="mt-6 max-w-3xl text-base leading-8 text-[var(--foreground-soft)] sm:text-lg">
+              {siteConfig.name} is Gokul Saraswat&apos;s portfolio-first learning platform for engineers who want
+              a serious path from student foundations to architect, manager, and CTO-level thinking.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/learn" className="btn-primary">
+                Explore learning
+              </Link>
+              <Link href="/blog" className="btn-secondary">
+                Read the blog
+              </Link>
+              <Link href="/stories" className="btn-secondary">
+                Personal stories
+              </Link>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              {heroPills.map((pill) => (
+                <span key={pill} className="chip-subtle">
+                  {pill}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {heroStats.map((item) => (
-              <div key={item.label} className="rounded-3xl border border-[color:var(--card-border)] bg-[var(--card-strong)] p-5">
+              <div key={item.label} className="surface-muted p-5">
                 <p className="text-3xl font-semibold tracking-tight">{item.value}</p>
-                <p className="mt-3 text-sm font-medium uppercase tracking-[0.2em] text-[var(--foreground-soft)]">
+                <p className="mt-3 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--foreground-soft)]">
                   {item.label}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">{item.note}</p>
@@ -55,18 +62,36 @@ export function HomeHero() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="grid gap-6">
           <LoaderSlot />
+
           <div className="card-surface p-6 sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--foreground-soft)]">
-              Resume snapshot
-            </p>
-            <ul className="mt-5 space-y-4 text-sm leading-7 text-[var(--foreground-soft)] sm:text-base">
-              <li>Portfolio-led homepage with your identity and future resume highlights.</li>
-              <li>Structured learning architecture for 500+ topics.</li>
-              <li>Blogs, downloadable files, and reading-first topic pages.</li>
-              <li>ChatGPT multi-branch friendly project workflow from day one.</li>
-            </ul>
+            <p className="section-eyebrow">Resume snapshot</p>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Engineer-first identity. Learning system second.
+            </h2>
+            <div className="mt-6 grid gap-4">
+              {resumeSnapshot.map((item) => (
+                <div key={item.title} className="surface-muted p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--foreground-soft)]">
+                    {item.title}
+                  </p>
+                  <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">{item.summary}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card-surface p-6 sm:p-8">
+            <p className="section-eyebrow">Current positioning</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {heroLabels.map((item) => (
+                <div key={item.label} className="rounded-2xl border border-[color:var(--card-border)] px-4 py-4">
+                  <p className="text-sm font-semibold">{item.label}</p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--foreground-soft)]">{item.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

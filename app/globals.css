@@ -48,14 +48,28 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+html.dark body {
+  background:
+    radial-gradient(circle at top, rgba(124, 58, 237, 0.16), transparent 26%),
+    radial-gradient(circle at 82% 12%, rgba(34, 211, 238, 0.12), transparent 24%),
+    linear-gradient(180deg, rgba(8, 12, 29, 0.88) 0%, rgba(5, 8, 22, 1) 100%);
+}
+
+html:not(.dark) body {
+  background:
+    radial-gradient(circle at top, rgba(124, 58, 237, 0.14), transparent 26%),
+    radial-gradient(circle at 82% 12%, rgba(8, 145, 178, 0.1), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(238, 242, 255, 1) 100%);
 }
 
 ::selection {
   background: rgba(124, 58, 237, 0.24);
   color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 .page-shell {
@@ -93,6 +107,16 @@ a {
   border-radius: 1.5rem;
 }
 
+.surface-muted {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid var(--card-border);
+  border-radius: 1.25rem;
+}
+
+html:not(.dark) .surface-muted {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.48) 100%);
+}
+
 .muted-copy {
   color: var(--foreground-soft);
 }
@@ -113,4 +137,76 @@ html:not(.dark) .grid-fade {
 
 .header-border {
   border-color: var(--card-border);
+}
+
+.section-eyebrow {
+  color: var(--foreground-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  background: var(--accent-soft);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.chip-subtle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--foreground-soft);
+}
+
+html:not(.dark) .chip-subtle {
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.85rem 1.3rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-strong);
+  padding: 0.85rem 1.3rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-2px);
 }

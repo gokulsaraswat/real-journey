@@ -1,0 +1,32 @@
+PATCH 8 — FILE PARSERS
+
+Branch:
+feature/file-parsers
+
+What this patch adds:
+- PDF upload analysis via pdf-parse
+- DOCX upload analysis via mammoth
+- one upload route for all six intake formats
+- parser engine and warning output in admin upload studio
+- updated upload readiness docs and queue copy
+
+Apply steps:
+1. Create and switch branch:
+   git checkout -b feature/file-parsers
+2. Copy this patch into the repo root.
+3. Install dependencies:
+   npm install
+4. Run locally:
+   npm run dev
+5. Open:
+   /admin/uploads
+
+Quick checks:
+- MD or MDX upload still returns title, slug, summary, and headings
+- PDF upload returns a metadata draft and parser notes
+- DOCX upload returns a metadata draft and parser notes
+- parser card shows engine name and any extraction warnings
+
+Merge note:
+This patch only changes upload parsing and admin upload presentation.
+Do not mix it with auth, storage, or publish workflow changes.
