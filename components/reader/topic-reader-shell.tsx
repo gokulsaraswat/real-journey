@@ -38,10 +38,11 @@ function ReaderActions({
 }) {
   return (
     <div className="flex flex-wrap gap-3">
-      <div className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] p-1">
+      <div role="group" aria-label="Reader mode" className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] p-1">
         <button
           type="button"
           onClick={() => setMode("docs")}
+          aria-pressed={mode === "docs"}
           className={`rounded-full px-4 py-2 text-sm font-medium transition ${
             mode === "docs" ? "bg-[var(--foreground)] text-[var(--background)]" : "text-[var(--foreground-soft)]"
           }`}
@@ -51,6 +52,7 @@ function ReaderActions({
         <button
           type="button"
           onClick={() => setMode("ebook")}
+          aria-pressed={mode === "ebook"}
           className={`rounded-full px-4 py-2 text-sm font-medium transition ${
             mode === "ebook" ? "bg-[var(--foreground)] text-[var(--background)]" : "text-[var(--foreground-soft)]"
           }`}
@@ -76,7 +78,7 @@ function ReaderOutline({ items }: { items: ReaderOutlineItem[] }) {
   return (
     <div className="card-surface p-6 sm:p-7">
       <p className="section-eyebrow">Outline</p>
-      <nav className="mt-5 grid gap-2">
+      <nav aria-label="Topic outline" className="mt-5 grid gap-2">
         {items.map((item) => (
           <a
             key={item.id}
@@ -217,12 +219,20 @@ export function TopicReaderShell({
   return (
     <>
       <div className="pointer-events-none fixed inset-x-0 top-[4.5rem] z-40 h-1 bg-transparent">
-        <div className="h-full rounded-full bg-[var(--accent)] transition-[width] duration-150" style={{ width: `${progress}%` }} />
+        <div
+          role="progressbar"
+          aria-label="Reading progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(progress)}
+          className="h-full rounded-full bg-[var(--accent)] transition-[width] duration-150"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
       <section className="page-shell py-10 sm:py-14 lg:py-16">
         <div className={mode === "ebook" ? "" : "grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]"}>
-          <article id="topic-reader-article" className={articleClassName}>
+          <article id="topic-reader-article" aria-labelledby="topic-reader-title" className={articleClassName}>
             <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-[var(--foreground-soft)]">
               {breadcrumbs.map((item, index) => {
                 const isLast = index === breadcrumbs.length - 1;
@@ -248,7 +258,7 @@ export function TopicReaderShell({
                 <span className="chip-subtle">{context.topic.estimatedReadMinutes ?? 10} min read</span>
               </div>
 
-              <h1 className={`mt-6 font-semibold tracking-tight ${mode === "ebook" ? "text-4xl sm:text-6xl" : "text-4xl sm:text-6xl"}`}>
+              <h1 id="topic-reader-title" className={`mt-6 font-semibold tracking-tight ${mode === "ebook" ? "text-4xl sm:text-6xl" : "text-4xl sm:text-6xl"}`}>
                 {context.topic.title}
               </h1>
               <p className={`mt-6 max-w-3xl text-[var(--foreground-soft)] ${mode === "ebook" ? "text-lg leading-9" : "text-base leading-8 sm:text-lg"}`}>

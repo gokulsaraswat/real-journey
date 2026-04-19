@@ -18,12 +18,15 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <Link className="rounded-2xl border border-[color:var(--card-border)] px-4 py-3 text-sm font-medium text-[var(--foreground-soft)] transition hover:bg-white/5 hover:text-[var(--foreground)]" href="/contribute">
               Contribute
             </Link>
             <Link className="rounded-2xl border border-[color:var(--card-border)] px-4 py-3 text-sm font-medium text-[var(--foreground-soft)] transition hover:bg-white/5 hover:text-[var(--foreground)]" href="/admin">
               Admin
+            </Link>
+            <Link className="rounded-2xl border border-[color:var(--card-border)] px-4 py-3 text-sm font-medium text-[var(--foreground-soft)] transition hover:bg-white/5 hover:text-[var(--foreground)]" href="/accessibility">
+              Accessibility
             </Link>
             <a
               className="rounded-2xl border border-[color:var(--card-border)] px-4 py-3 text-sm font-medium text-[var(--foreground-soft)] transition hover:bg-white/5 hover:text-[var(--foreground)]"

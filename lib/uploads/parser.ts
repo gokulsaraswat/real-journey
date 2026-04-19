@@ -35,10 +35,16 @@ export type UploadAnalysis = {
   slug: string;
   summary: string;
   bodyPreview: string;
+  canonicalBody: string;
   wordCount: number;
   estimatedReadTime: number;
   headings: UploadHeading[];
   frontmatter: Record<string, string>;
+  domain: string;
+  track: string;
+  level: string;
+  category: string;
+  subcategory: string;
   destinationPath: string;
   destinationKind: UploadDestinationKind;
   visibility: UploadVisibility;
@@ -56,6 +62,7 @@ type BuildUploadAnalysisOptions = {
   titleCandidate: string;
   summaryCandidate?: string;
   plainText: string;
+  bodyContent?: string;
   headings: UploadHeading[];
   frontmatter: Record<string, string>;
   draft: UploadDraftInput;
@@ -157,6 +164,7 @@ export function analyzeTextUpload(options: {
     summaryCandidate:
       frontmatter.summary ?? frontmatter.description ?? (htmlDescription || undefined),
     plainText,
+    bodyContent: body,
     headings,
     frontmatter,
     draft,
@@ -214,6 +222,7 @@ export function analyzeExtractedUpload(options: {
     titleCandidate,
     summaryCandidate: detectedSummary,
     plainText: extractedText,
+    bodyContent: extractedHtml ?? extractedText,
     headings,
     frontmatter: {},
     draft,
@@ -242,6 +251,7 @@ function buildUploadAnalysis(options: BuildUploadAnalysisOptions): UploadAnalysi
     parserEngine,
     parserWarnings = [],
     plainText,
+    bodyContent,
     sourceFormat,
     summaryCandidate,
     titleCandidate,
@@ -259,6 +269,11 @@ function buildUploadAnalysis(options: BuildUploadAnalysisOptions): UploadAnalysi
   const wordCount = countWords(collapsedPlainText);
   const estimatedReadTime = Math.max(1, Math.ceil(wordCount / 220));
   const slug = slugify(frontmatter.slug ?? cleanedTitle);
+  const canonicalBody = buildCanonicalBody({
+    sourceFormat,
+    bodyContent,
+    plainText,
+  });
 
   return {
     fileName,
@@ -269,10 +284,16 @@ function buildUploadAnalysis(options: BuildUploadAnalysisOptions): UploadAnalysi
     slug,
     summary,
     bodyPreview,
+    canonicalBody,
     wordCount,
     estimatedReadTime,
     headings,
     frontmatter,
+    domain: draft.domain,
+    track: draft.track,
+    level: draft.level,
+    category: draft.category,
+    subcategory: draft.subcategory,
     destinationPath: buildDestinationPath(draft),
     destinationKind: draft.destinationKind,
     visibility: draft.visibility,
@@ -288,6 +309,76 @@ function buildDestinationPath(draft: UploadDraftInput): string {
     .map((segment) => normalizePathSegment(segment))
     .filter(Boolean)
     .join(" / ");
+}
+
+
+function buildCanonicalBody(options: {
+  sourceFormat: UploadSourceFormat;
+  bodyContent?: string;
+  plainText: string;
+}): string {
+  const { bodyContent, plainText, sourceFormat } = options;
+
+  if (sourceFormat === "md" || sourceFormat === "mdx") {
+    const markdownBody = String(bodyContent ?? "").trim();
+    return markdownBody.length ? markdownBody : fallbackCanonicalBody();
+  }
+
+  const rawText =
+    sourceFormat === "html"
+      ? htmlToStructuredText(String(bodyContent ?? plainText))
+      : String(bodyContent ?? plainText);
+
+  return buildTextBodyFromSource(rawText);
+}
+
+function htmlToStructuredText(content: string): string {
+  return decodeHtmlEntities(
+    stripHtmlTags(
+      content
+        .replace(/<br\s*\/?\>/gi, "\n")
+        .replace(/<\/(p|div|section|article|blockquote|pre|li|ul|ol|h[1-6])>/gi, "\n\n")
+        .replace(/<(li)[^>]*>/gi, "- "),
+    ),
+  );
+}
+
+function buildTextBodyFromSource(value: string): string {
+  const blocks = value
+    .replace(/\r/g, "")
+    .split(/\n\s*\n/)
+    .map((block) =>
+      block
+        .split(/\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .join(" "),
+    )
+    .map((block) => block.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+  if (blocks.length === 0) {
+    return fallbackCanonicalBody();
+  }
+
+  const [firstBlock, ...restBlocks] = blocks;
+  const output = ["## Overview", "", firstBlock];
+
+  if (restBlocks.length > 0) {
+    output.push("", "## Working notes", "");
+    restBlocks.forEach((block, index) => {
+      output.push(block);
+      if (index < restBlocks.length - 1) {
+        output.push("");
+      }
+    });
+  }
+
+  return output.join("\n");
+}
+
+function fallbackCanonicalBody(): string {
+  return ["## Overview", "", "Add the final canonical MDX body here before publish."].join("\n");
 }
 
 function normalizeDestinationKind(input?: string): UploadDestinationKind {

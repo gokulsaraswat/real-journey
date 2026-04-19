@@ -7,6 +7,11 @@ import type {
   ReactNode,
 } from "react";
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { UploadPersistencePanel } from "@/components/admin/upload-persistence-panel";
+import { publishDraftStorageKey } from "@/lib/publish/constants";
+import type { PublishDraftSeed } from "@/lib/publish/workflow";
 import type { UploadAnalysis, UploadDestinationKind, UploadVisibility } from "@/lib/uploads/parser";
 
 const acceptedExtensions = ".md,.mdx,.txt,.html,.pdf,.docx";
@@ -32,6 +37,7 @@ type UploadStudioResponse = {
 };
 
 export function UploadStudio() {
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [draft, setDraft] = useState<UploadFormDraft>(defaultDraft);
   const [analysis, setAnalysis] = useState<UploadAnalysis | null>(null);
@@ -142,6 +148,34 @@ export function UploadStudio() {
     }
   }
 
+
+  function sendToPublishWorkflow() {
+    if (!analysis || typeof window === "undefined") {
+      return;
+    }
+
+    const seed: PublishDraftSeed = {
+      title: analysis.title,
+      slug: analysis.slug,
+      summary: analysis.summary,
+      canonicalBody: analysis.canonicalBody,
+      sourceFileName: analysis.fileName,
+      sourceFormat: analysis.sourceFormat,
+      destinationKind: analysis.destinationKind,
+      visibility: analysis.visibility,
+      domain: analysis.domain,
+      track: analysis.track,
+      level: analysis.level,
+      category: analysis.category,
+      subcategory: analysis.subcategory,
+      parserWarnings: analysis.parserWarnings,
+      normalizationNotes: analysis.normalizationNotes,
+    };
+
+    window.sessionStorage.setItem(publishDraftStorageKey, JSON.stringify(seed));
+    router.push("/admin/publish");
+  }
+
   const recommendedTemplateHref = analysis
     ? analysis.sourceFormat === "html"
       ? "/api/upload-template/html"
@@ -162,12 +196,12 @@ export function UploadStudio() {
               This branch parses MD, MDX, TXT, HTML, PDF, and DOCX into one clean metadata draft. PDF and DOCX now run through dedicated binary parsers before you normalize to MDX.
             </p>
           </div>
-          <a
+          <Link
             href="/api/upload-template/mdx"
             className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5"
           >
             Download MDX template
-          </a>
+          </Link>
         </div>
 
         <form className="mt-6 grid gap-6" onSubmit={onSubmit}>
@@ -316,17 +350,26 @@ export function UploadStudio() {
             <div>
               <p className="text-lg font-semibold">Normalization preview</p>
               <p className="mt-2 text-sm leading-6 text-[var(--foreground-soft)]">
-                Review the suggested metadata before wiring persistence and publish actions.
+                Review the suggested metadata, then send it straight into the publish workflow for a Git-ready content packet.
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={copySlug}
-              className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5"
-            >
-              {copied ? "Slug copied" : "Copy slug"}
-            </button>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={copySlug}
+                className="inline-flex rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5"
+              >
+                {copied ? "Slug copied" : "Copy slug"}
+              </button>
+              <button
+                type="button"
+                onClick={sendToPublishWorkflow}
+                className="inline-flex rounded-full bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition hover:-translate-y-0.5"
+              >
+                Send to publish workflow
+              </button>
+            </div>
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -336,6 +379,8 @@ export function UploadStudio() {
             <Stat label="Word count" value={String(analysis.wordCount)} />
             <Stat label="Parser" value={analysis.parserEngine ?? "native text"} />
           </div>
+
+          {file ? <UploadPersistencePanel analysis={analysis} file={file} /> : null}
 
           <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
             <div className="space-y-6">
@@ -443,6 +488,13 @@ export function UploadStudio() {
                 <p className="text-sm font-semibold">Body preview</p>
                 <pre className="mt-4 whitespace-pre-wrap text-sm leading-7 text-[var(--foreground-soft)]">
                   {analysis.bodyPreview}
+                </pre>
+              </div>
+
+              <div className="rounded-3xl border border-[color:var(--card-border)] bg-[var(--card-strong)] p-5">
+                <p className="text-sm font-semibold">Canonical MDX draft</p>
+                <pre className="mt-4 whitespace-pre-wrap text-sm leading-7 text-[var(--foreground-soft)]">
+                  {analysis.canonicalBody}
                 </pre>
               </div>
             </div>
