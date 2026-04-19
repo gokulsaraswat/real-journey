@@ -1,43 +1,35 @@
-import { AdminSectionCard } from "@/components/admin/admin-section-card";
-import { AdminStoryLane } from "@/components/admin/admin-story-lane";
-import { getAdminStoryCollections } from "@/lib/data/admin";
-
-const guardrails = [
-  "Keep private interview and draft material outside public story indexes.",
-  "Allow reader pages and downloadable files to exist together per collection.",
-  "Use visibility at the content level so mixed collections stay manageable.",
-];
+import { AdminShell } from "@/components/admin/admin-shell";
+import { StoriesVaultManager } from "@/components/admin/stories-vault-manager";
+import {
+  getPrivateStories,
+  getPublicStories,
+  getStoryCollectionSummaries,
+} from "@/lib/data/stories";
+import { siteConfig } from "@/lib/config/site";
 
 export default function AdminStoriesPage() {
-  const collections = getAdminStoryCollections();
+  const publicStories = getPublicStories();
+  const privateStories = getPrivateStories();
+  const publicCollections = getStoryCollectionSummaries("public");
+  const privateCollections = getStoryCollectionSummaries("private");
 
   return (
-    <>
-      <AdminSectionCard
-        eyebrow="Stories"
-        title="Mixed, public, and private personal collections"
-        description="Personal stories need their own operating model because they can hold certifications, interviews, code, notes, and files with very different visibility rules."
-      >
-        <div className="grid gap-4 lg:grid-cols-3">
-          {collections.map((collection) => (
-            <AdminStoryLane key={collection.path} collection={collection} />
-          ))}
-        </div>
-      </AdminSectionCard>
-
-      <AdminSectionCard
-        eyebrow="Guardrails"
-        title="Rules for keeping personal material clean"
-        description="This page reserves the story-management lane now so the future storage branch can plug in real files without redesigning the operating model."
-      >
-        <div className="grid gap-4 md:grid-cols-3">
-          {guardrails.map((rule) => (
-            <article key={rule} className="surface-muted p-5">
-              <p className="text-sm leading-7 text-[var(--foreground-soft)]">{rule}</p>
-            </article>
-          ))}
-        </div>
-      </AdminSectionCard>
-    </>
+    <AdminShell
+      eyebrow="Admin / Stories"
+      title="Manage public stories and the private vault"
+      description="Patch 11 turns the story area into a real content lane with separated public and private reader pages, generated source downloads, and a cleaner admin inventory for future storage-backed uploads."
+      actions={[
+        { label: "Open stories", href: "/stories", style: "secondary" },
+        { label: "Open private vault", href: "/stories/private", style: "secondary" },
+        { label: "Send feedback", href: siteConfig.feedbackEmailHref, style: "primary", external: true },
+      ]}
+    >
+      <StoriesVaultManager
+        publicCollections={publicCollections}
+        privateCollections={privateCollections}
+        publicStories={publicStories}
+        privateStories={privateStories}
+      />
+    </AdminShell>
   );
 }

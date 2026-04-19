@@ -1,24 +1,25 @@
-import { AdminSectionCard } from "@/components/admin/admin-section-card";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { AdminUploadFormatLibrary } from "@/components/admin/admin-upload-format-library";
-import { AdminQueueList } from "@/components/admin/admin-queue-list";
+import { AdminUploadQueue } from "@/components/admin/admin-upload-queue";
 import { UploadStudio } from "@/components/admin/upload-studio";
 import {
-  getAdminQueue,
+  adminUploadQueue,
   uploadFormatGuides,
   uploadMetadataFields,
   uploadPipeline,
 } from "@/lib/data/admin";
 
 export default function AdminUploadsPage() {
-  const queue = getAdminQueue();
-
   return (
-    <>
-      <AdminSectionCard
-        eyebrow="Admin / Uploads"
-        title="Upload intake lane"
-        description="Use one intake surface for raw files, generate a clean metadata draft, and keep the original source ready for download. All six intake formats are now live in this branch."
-      >
+    <AdminShell
+      eyebrow="Admin / Uploads"
+      title="Upload intake lane"
+      description="Use one intake surface for raw files, generate a clean metadata draft, and keep the original source ready for download. All six intake formats now feed directly into the publish workflow."
+      actions={[
+        { label: "Open dashboard", href: "/admin", style: "secondary" },
+        { label: "Download MDX template", href: "/api/upload-template/mdx", style: "primary" },
+      ]}
+    >
       <div className="grid gap-6 2xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
         <UploadStudio />
 
@@ -57,13 +58,7 @@ export default function AdminUploadsPage() {
           </div>
         </div>
       </div>
-      </AdminSectionCard>
 
-      <AdminSectionCard
-        eyebrow="Queue + Pipeline"
-        title="Pipeline contract and representative queue"
-        description="Static seeded data for now; persistence and publish orchestration can plug in without changing this route surface."
-      >
       <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
         <div className="card-surface p-6 sm:p-7">
           <p className="text-lg font-semibold">Pipeline contract</p>
@@ -86,14 +81,13 @@ export default function AdminUploadsPage() {
         <div className="card-surface p-6 sm:p-7">
           <p className="text-lg font-semibold">Representative queue</p>
           <p className="mt-2 text-sm leading-6 text-[var(--foreground-soft)]">
-            This queue stays seeded until storage and real publishing jobs are wired. The layout is stable, so the next branch can focus on persistence and publish workflow instead of parsing.
+            This queue stays seeded until storage and real publishing jobs are wired. Upload parsing is live now, and the next step is moving strong drafts through the publish planner.
           </p>
           <div className="mt-5">
-            <AdminQueueList items={queue} />
+            <AdminUploadQueue items={adminUploadQueue} />
           </div>
         </div>
       </div>
-      </AdminSectionCard>
-    </>
+    </AdminShell>
   );
 }

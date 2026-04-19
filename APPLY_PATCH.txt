@@ -1,32 +1,17 @@
-PATCH 8 — FILE PARSERS
+Patch 19 apply order
 
-Branch:
-feature/file-parsers
+1. Create a new git branch
+   git checkout -b feature/topic-catalog-foundation
 
-What this patch adds:
-- PDF upload analysis via pdf-parse
-- DOCX upload analysis via mammoth
-- one upload route for all six intake formats
-- parser engine and warning output in admin upload studio
-- updated upload readiness docs and queue copy
+2. Copy this patch into the repo root
 
-Apply steps:
-1. Create and switch branch:
-   git checkout -b feature/file-parsers
-2. Copy this patch into the repo root.
-3. Install dependencies:
-   npm install
-4. Run locally:
+3. Start the app
    npm run dev
-5. Open:
-   /admin/uploads
 
-Quick checks:
-- MD or MDX upload still returns title, slug, summary, and headings
-- PDF upload returns a metadata draft and parser notes
-- DOCX upload returns a metadata draft and parser notes
-- parser card shows engine name and any extraction warnings
+4. Visit
+   /admin/topic-catalog
+   /api/admin/topic-catalog
 
-Merge note:
-This patch only changes upload parsing and admin upload presentation.
-Do not mix it with auth, storage, or publish workflow changes.
+5. Merge after review
+
+No new npm dependencies are required in this patch.

@@ -99,7 +99,7 @@ export default async function LevelPage({ params }: LevelPageProps) {
           <div>
             <p className="section-eyebrow">Categories</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Choose the category that matches this level's strongest learning need.
+              Choose the category that matches this level&apos;s strongest learning need.
             </h2>
           </div>
           <p className="max-w-2xl text-sm leading-7 text-[var(--foreground-soft)]">

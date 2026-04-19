@@ -24,3 +24,11 @@ pnpm-debug.log*
 
 # local files
 *.tsbuildinfo
+
+# test artifacts
+/playwright-report
+/test-results
+/coverage
+
+# lighthouse artifacts
+/.lighthouseci

@@ -38,10 +38,13 @@ export function ThemeToggle({ compact = false }: ThemeToggleProps) {
         applyTheme(updated);
         setTheme(updated);
       }}
+      role="switch"
+      aria-checked={mounted ? theme === "light" : false}
+      title={mounted ? `Current theme: ${theme}. Activate to switch to ${nextTheme}.` : "Toggle theme"}
       className={`inline-flex items-center justify-center rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] text-sm font-medium transition hover:-translate-y-0.5 ${
         compact ? "px-3 py-2" : "px-4 py-2"
       }`}
-      aria-label={mounted ? `Switch to ${nextTheme} mode` : "Toggle theme"}
+      aria-label={mounted ? `Current theme ${theme}. Switch to ${nextTheme} mode` : "Toggle theme"}
     >
       {mounted ? (theme === "dark" ? "Light mode" : "Dark mode") : "Theme"}
     </button>

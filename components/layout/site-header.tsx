@@ -37,13 +37,15 @@ export function SiteHeader() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-2 lg:flex">
+          <nav aria-label="Primary navigation" className="hidden items-center gap-2 lg:flex">
             {navItems.map((item) => {
               const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+
               return (
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={active ? "page" : undefined}
                   className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                     active
                       ? "bg-[var(--accent-soft)] text-[var(--foreground)]"
@@ -70,6 +72,7 @@ export function SiteHeader() {
             type="button"
             onClick={() => setOpen((current) => !current)}
             className="inline-flex items-center justify-center rounded-full border border-[color:var(--card-border)] bg-[var(--card-strong)] px-4 py-2 text-sm font-medium lg:hidden"
+            aria-controls="mobile-navigation"
             aria-expanded={open}
             aria-label="Toggle navigation"
           >
@@ -78,14 +81,16 @@ export function SiteHeader() {
         </div>
 
         {open ? (
-          <div className="card-surface mb-4 p-4 lg:hidden">
-            <div className="grid gap-2">
+          <div id="mobile-navigation" className="card-surface mb-4 p-4 lg:hidden">
+            <nav aria-label="Mobile primary navigation" className="grid gap-2">
               {navItems.map((item) => {
                 const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
                       active
                         ? "bg-[var(--accent-soft)] text-[var(--foreground)]"
@@ -96,7 +101,7 @@ export function SiteHeader() {
                   </Link>
                 );
               })}
-            </div>
+            </nav>
             <div className="mt-4 flex items-center justify-between gap-3 border-t border-[color:var(--card-border)] pt-4">
               <ThemeToggle compact />
               <Link

@@ -8,9 +8,9 @@ export function LoaderSlot({
   description = "Replace the fallback animation with your own GIF later.",
 }: LoaderSlotProps) {
   return (
-    <div className="card-surface w-full max-w-xl p-6 sm:p-8">
+    <div className="card-surface w-full max-w-xl p-6 sm:p-8" role="status" aria-live="polite" aria-busy="true">
       <div className="flex items-start gap-5">
-        <div className="relative h-16 w-16 shrink-0 rounded-full border border-[color:var(--card-border)] bg-[var(--accent-soft)]">
+        <div aria-hidden="true" className="relative h-16 w-16 shrink-0 rounded-full border border-[color:var(--card-border)] bg-[var(--accent-soft)]">
           <span className="absolute inset-0 rounded-full border border-white/10" />
           <span
             className="absolute inset-[12px] animate-spin rounded-full border-2 border-transparent"

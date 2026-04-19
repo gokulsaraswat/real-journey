@@ -210,3 +210,77 @@ html:not(.dark) .chip-subtle {
 .btn-secondary:hover {
   transform: translateY(-2px);
 }
+
+
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-220%);
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-strong);
+  color: var(--foreground);
+  padding: 0.85rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 3px;
+}
+
+main:focus {
+  outline: none;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --card-border: rgba(15, 23, 42, 0.22);
+  }
+
+  html.dark {
+    --card-border: rgba(226, 232, 240, 0.36);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+
+  .skip-link {
+    transition: none;
+  }
+}

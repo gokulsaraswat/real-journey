@@ -7,9 +7,23 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "qa": "npm run lint && npm run typecheck && npm run test:unit",
+    "qa:full": "npm run lint && npm run typecheck && npm run test:unit && npm run build && npm run test:e2e && npm run audit:lighthouse",
+    "test:a11y": "playwright test tests/e2e/accessibility-navigation.spec.ts",
+    "audit:lighthouse": "lhci autorun",
+    "qa:accessibility": "npm run test:a11y && npm run audit:lighthouse"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.56.1",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "mammoth": "^1.12.0",
     "next": "^15.5.2",
     "pdf-parse": "^2.4.5",
@@ -18,14 +32,16 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "es-abstract": "^1.24.2",
     "eslint": "^9",
     "eslint-config-next": "^15.5.2",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "@lhci/cli": "^0.15.1"
   }
 }
